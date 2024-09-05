@@ -13,9 +13,10 @@ SECTION "rst 20", ROM0 [$20]
 SECTION "rst 28", ROM0 [$28]
 	rst $38
 SECTION "rst 30", ROM0 [$30]
-	rst $38
+_Bankswitch::
+	jp Bankswitch
 SECTION "rst 38", ROM0 [$38]
-	rst $38
+	ret
 
 ; Hardware interrupts
 SECTION "vblank", ROM0 [$40]
@@ -280,16 +281,6 @@ LoadFrontSpriteByMonIndex::
 	pop bc
 	ld [hl], b
 	and a
-	pop hl
-	jr z, .invalidDexNumber ; dex #0 invalid
-	cp NUM_POKEMON + 1
-	jr c, .validDexNumber   ; dex >#151 invalid
-.invalidDexNumber
-	ld a, RHYDON ; $1
-	ld [wcf91], a
-	ret
-.validDexNumber
-	push hl
 	ld de, vFrontPic
 	call LoadMonFrontSprite
 	pop hl
@@ -2585,16 +2576,19 @@ EndTrainerBattle::
 	res 0, [hl]                  ; player is no longer engaged by any trainer
 	ld a, [wIsInBattle]
 	cp $ff
-	jp z, ResetButtonPressedAndMapScript
+	jr z, EndTrainerBattleWhiteout
 	ld a, $2
 	call ReadTrainerHeaderInfo
 	ld a, [wTrainerHeaderFlagBit]
 	ld c, a
 	ld b, FLAG_SET
 	call TrainerFlagAction   ; flag trainer as fought
-	ld a, [wEnemyMonOrTrainerClass]
-	cp 200
-	jr nc, .skipRemoveSprite    ; test if trainer was fought (in that case skip removing the corresponding sprite)
+	ld a, [wWasTrainerBattle]
+	and a
+	jr nz, .skipRemoveSprite ; test if trainer was fought (in that case skip removing the corresponding sprite)
+	ld a, [wCurMap]
+	cp POKEMONTOWER_7
+	jr z, .skipRemoveSprite ; the two 7F scripts call EndTrainerBattle manually after wIsTrainerBattle has been unset
 	ld hl, wMissableObjectList
 	ld de, $2
 	ld a, [wSpriteIndex]
@@ -2604,13 +2598,17 @@ EndTrainerBattle::
 	ld [wMissableObjectIndex], a               ; load corresponding missable object index and remove it
 	predef HideObject
 .skipRemoveSprite
+	xor a
+	ld [wWasTrainerBattle], a
 	ld hl, wd730
 	bit 4, [hl]
 	res 4, [hl]
 	ret nz
 
-ResetButtonPressedAndMapScript::
+EndTrainerBattleWhiteout::
 	xor a
+	ld [wIsTrainerBattle], a
+	ld [wWasTrainerBattle], a
 	ld [wJoyIgnore], a
 	ld [hJoyHeld], a
 	ld [hJoyPressed], a
@@ -2627,9 +2625,10 @@ InitBattleEnemyParameters::
 	ld a, [wEngagedTrainerClass]
 	ld [wCurOpponent], a
 	ld [wEnemyMonOrTrainerClass], a
-	cp 200
+	ld a, [wIsTrainerBattle]
+	and a
 	ld a, [wEngagedTrainerSet]
-	jr c, .noTrainer
+	jr z, .noTrainer
 	ld [wTrainerNo], a
 	ret
 .noTrainer
@@ -2728,7 +2727,17 @@ EngageMapTrainer::
 	ld a, [hli]    ; load trainer class
 	ld [wEngagedTrainerClass], a
 	ld a, [hl]     ; load trainer mon set
+	bit 7, a
+	jr nz, .pokemon
 	ld [wEngagedTrainerSet], a
+	ld a, 1
+	ld [wIsTrainerBattle], a
+	jp PlayTrainerMusic
+.pokemon
+	and $7F
+	ld [wEngagedTrainerSet], a
+	xor a
+	ld [wIsTrainerBattle], a
 	jp PlayTrainerMusic
 
 PrintEndBattleText::

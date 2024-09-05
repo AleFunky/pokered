@@ -42,26 +42,26 @@ HealParty:
 	;HL now points to the address of the move in the master moves characteristics list
 	;Check that the HL-pointed address itself does not fall outside of the starting or ending address of the list
 	;If it does, HL is pointing to a glitch move. Default the base pp to 0 instead of trying to read it.
-	ld de, Moves
-	ld a, l
-	sub e
-	ld a, h
-	sbc d
-	ld a, 0
-	jr c, .basePP_loaded	;if HL is < Moves, this is a glitch move and load 0 pp
-	ld de, MovesEndOfList
-	ld a, l
-	sub e
-	ld a, h
-	sbc d
-	ld a, 0
-	jr nc, .basePP_loaded	;if HL is >= MovesEndOfList, this is a glitch move and load 0 pp
+;	ld de, Moves
+;	ld a, l
+;	sub e
+;	ld a, h
+;	sbc d
+;	ld a, 0
+;	jr c, .basePP_loaded	;if HL is < Moves, this is a glitch move and load 0 pp
+;	ld de, MovesEndOfList
+;	ld a, l
+;	sub e
+;	ld a, h
+;	sbc d
+;	ld a, 0
+;	jr nc, .basePP_loaded	;if HL is >= MovesEndOfList, this is a glitch move and load 0 pp
 	
 	ld de, wcd6d
 	ld a, BANK(Moves)
 	call FarCopyData
 	ld a, [wcd6d + 5] ; PP is byte 5 of move data
-.basePP_loaded
+;.basePP_loaded
 	pop bc
 	pop de
 	pop hl

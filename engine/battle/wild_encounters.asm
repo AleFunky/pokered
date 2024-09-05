@@ -116,6 +116,7 @@ TryDoWildEncounter:
 	callba DisallowWildMew
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 	xor a
+	ld [wIsTrainerBattle], a
 	ret
 .shinycheck_repel
 ;joenote - initiate encounter if shiny (overrides repel)

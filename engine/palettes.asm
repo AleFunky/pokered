@@ -99,9 +99,6 @@ SetPal_StatusScreen:
 	ld bc, $10
 	call CopyData
 	ld a, [wcf91]
-	cp VICTREEBEL + 1
-	jr c, .pokemon
-	ld a, $1 ; not pokemon
 .pokemon
 	call DeterminePaletteIDOutOfBattle
 	push af
@@ -1051,9 +1048,7 @@ TransferMonPal:
 	ld a, d
 	push af
 	ld a, [wcf91]
-	cp VICTREEBEL+1
-	jr c, .isMon
-	sub VICTREEBEL+1
+	jr .isMon
 .back	
 	call GetGBCBasePalAddress
 	pop af
@@ -1226,6 +1221,7 @@ INCLUDE "data/sgb_packets.asm"
 INCLUDE "data/mon_palettes.asm"
 
 INCLUDE "data/super_palettes.asm"
-INCLUDE "data/gbc_palettes.asm"
 
 INCLUDE "data/sgb_border.asm"
+
+INCLUDE "data/gbc_palettes.asm"

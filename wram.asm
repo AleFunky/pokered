@@ -1949,7 +1949,7 @@ wNewSlotMachineBallTile:: ; d08a
 wCoordAdjustmentAmount:: ; d08a
 ; how much to add to the X/Y coord
 
-wUnusedD08A:: ; d08a
+wWasTrainerBattle:: ; d08a
 	ds 1
 
 wSpiralBallsBaseX:: ; d08b
@@ -2007,7 +2007,7 @@ wTownMapSpriteBlinkingEnabled:: ; d09b
 ; non-zero when enabled. causes nest locations to blink on and off.
 ; the town selection cursor will blink regardless of what this value is
 
-wUnusedD09B:: ; d09b
+wIsTrainerBattle:: ; d09b
 	ds 1
 
 wFBDestAddr:: ; d09c
@@ -2154,8 +2154,10 @@ wMonHPicBank::	;joenote - repurpose this filler byte to dynamically lookup the b
 wSavedTilesetType:: ; d0d4
 ; saved at the start of a battle and then written back at the end of the battle
 	ds 1
+wPokeBallAnimData:: ; d11e
+	ds 1
 
-	ds 2
+	ds 1
 
 
 wDamage:: ; d0d7
@@ -2206,7 +2208,7 @@ wPokeBallCaptureCalcTemp:: ; d11e
 
 ; lower nybble: number of shakes
 ; upper nybble: number of animations to play
-wPokeBallAnimData:: ; d11e
+
 
 wUsingPPUp:: ; d11e
 

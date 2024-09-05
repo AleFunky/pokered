@@ -26,13 +26,13 @@ farcall EQUS "callba"
 MACRO callba
 	ld b, BANK(\1)
 	ld hl, \1
-	call Bankswitch
+	rst _Bankswitch
 ENDM
 
 MACRO callab
 	ld hl, \1
 	ld b, BANK(\1)
-	call Bankswitch
+	rst _Bankswitch
 ENDM
 
 MACRO jpba

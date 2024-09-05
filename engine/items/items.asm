@@ -372,6 +372,8 @@ ItemUseBall:
 
 .captured
 	predef BallCaught_NuzlockeHandler	;joenote - set map flags for nuzlocke mode
+	ld a, $43 ; successful capture value
+	ld [wPokeBallAnimData], a
 	jr .skipShakeCalculations
 
 .failedToCapture

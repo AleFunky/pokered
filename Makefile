@@ -1,3 +1,5 @@
+RGBDS := ./rgbds-0.6.0/
+
 roms := \
 	pokered.gbc \
 	pokeblue.gbc \
@@ -27,7 +29,7 @@ pokebluejp_origback_obj := $(rom_obj:.o=_bluejp_origback.o)
 
 MD5 := md5sum -c
 
-RGBDS ?=
+RGBDS ?= 
 RGBASM  ?= $(RGBDS)rgbasm
 RGBFIX  ?= $(RGBDS)rgbfix
 RGBGFX  ?= $(RGBDS)rgbgfx

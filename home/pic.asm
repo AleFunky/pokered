@@ -40,8 +40,8 @@ _UncompressSpriteData::
 	;		- This is why loading the glitchy missingno sprite will corrupt the hall of fame data
 ;joenote - let's  put some limits in place so this can never happen.
 	ld b, a
-	;and $f
-	and $07	;this will cap the low nybble to a maximum of 7
+	and $f
+	;and $07	;this will cap the low nybble to a maximum of 7
 	jr nz, .skip1	;if the low nybble is zero, increment it to a value of 1
 	inc a	
 .skip1
@@ -51,8 +51,8 @@ _UncompressSpriteData::
 	ld [wSpriteHeight], a
 	ld a, b
 	swap a
-	;and $f
-	and $07	;this will cap the other nybble to a maximum of 7
+	and $f
+	;and $07	;this will cap the other nybble to a maximum of 7
 	jr nz, .skip2	;if the other nybble is zero, increment it to a value of 1
 	inc a	
 .skip2

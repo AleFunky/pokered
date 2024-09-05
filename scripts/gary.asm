@@ -86,7 +86,9 @@ GaryScript2:
 	ld a, $3
 .saveTrainerId
 	ld [wTrainerNo], a
-
+	ld a, 1
+	ld [wIsTrainerBattle], a
+ 
 	xor a
 	ld [hJoyHeld], a
 	ld a, $3
@@ -97,6 +99,8 @@ GaryScript3:
 	ld a, [wIsInBattle]
 	cp $ff
 	jp z, ResetGaryScript
+	xor a
+	ld [wIsTrainerBattle], a
 	call UpdateSprites
 	SetEvent EVENT_BEAT_CHAMPION_RIVAL
 	ld a, $f0

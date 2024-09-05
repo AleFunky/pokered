@@ -2,6 +2,7 @@ InitBattleVariables:
 	ld a, [hTilesetType]
 	ld [wSavedTilesetType], a
 	xor a
+	ld [wWasTrainerBattle], a
 	ld [wActionResultOrTookBattleTurn], a
 	ld [wBattleResult], a
 	ld hl, wPartyAndBillsPCSavedMenuItem
